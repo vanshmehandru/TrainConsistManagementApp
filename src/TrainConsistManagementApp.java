@@ -1,21 +1,26 @@
 import java.util.*;
-import java.util.stream.Collectors;
+import java.util.stream.*;
 
-// Base class
 class Bogie {
-    private String name;   // Sleeper, AC Chair, etc.
+    private String name;
+    private int capacity;
 
-    public Bogie(String name) {
+    public Bogie(String name, int capacity) {
         this.name = name;
+        this.capacity = capacity;
     }
 
     public String getName() {
         return name;
     }
 
+    public int getCapacity() {
+        return capacity;
+    }
+
     @Override
     public String toString() {
-        return name;
+        return name + "(" + capacity + ")";
     }
 }
 
@@ -23,29 +28,24 @@ public class TrainConsistManagementApp {
 
     public static void main(String[] args) {
 
-        // Step 1: Create list of bogies
+        // Step 1: Create bogie list
         List<Bogie> bogies = new ArrayList<>();
 
-        bogies.add(new Bogie("Sleeper"));
-        bogies.add(new Bogie("AC Chair"));
-        bogies.add(new Bogie("Sleeper"));
-        bogies.add(new Bogie("First Class"));
-        bogies.add(new Bogie("AC Chair"));
+        bogies.add(new Bogie("Sleeper", 72));
+        bogies.add(new Bogie("AC Chair", 50));
+        bogies.add(new Bogie("Sleeper", 72));
+        bogies.add(new Bogie("First Class", 24));
 
-        // Step 2: Convert to stream and group
-        Map<String, List<Bogie>> groupedBogies =
-                bogies.stream()
-                        .collect(Collectors.groupingBy(b -> b.getName()));
+        // Step 2: Stream → map → reduce
+        int totalSeats = bogies.stream()
+                .map(b -> b.getCapacity())     // extract capacity
+                .reduce(0, Integer::sum);      // sum all
 
-        // Step 3: Display grouped result
-        System.out.println("Grouped Bogies by Type:\n");
+        // Step 3: Display result
+        System.out.println("Total Seating Capacity: " + totalSeats);
 
-        for (Map.Entry<String, List<Bogie>> entry : groupedBogies.entrySet()) {
-            System.out.println(entry.getKey() + " -> " + entry.getValue());
-        }
-
-        // Step 4: Check original list unchanged
-        System.out.println("\nOriginal List:");
+        // Step 4: Original list check
+        System.out.println("\nOriginal Bogie List:");
         System.out.println(bogies);
     }
 }
