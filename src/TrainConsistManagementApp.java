@@ -1,21 +1,21 @@
 
-import java.util.Arrays;
-
 public class TrainConsistManagementApp {
 
-    public static String[] sortNames(String[] names) {
-        Arrays.sort(names);
-        return names;
+    public static boolean linearSearch(String[] arr, String key) {
+
+        for (String id : arr) {
+            if (id.equals(key)) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     public static void main(String[] args) {
 
-        String[] names = {"Sleeper", "AC Chair", "First Class"};
+        String[] bogies = {"BG101", "BG205", "BG309"};
 
-        System.out.println("Before: " + Arrays.toString(names));
-
-        sortNames(names);
-
-        System.out.println("After: " + Arrays.toString(names));
+        System.out.println(linearSearch(bogies, "BG309"));
     }
 }
