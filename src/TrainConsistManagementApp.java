@@ -3,31 +3,19 @@ import java.util.Arrays;
 
 public class TrainConsistManagementApp {
 
-    // Bubble Sort Method
-    public static void bubbleSort(int[] arr) {
-        int n = arr.length;
-
-        for (int i = 0; i < n - 1; i++) {
-            for (int j = 0; j < n - i - 1; j++) {
-
-                if (arr[j] > arr[j + 1]) {
-                    // swap
-                    int temp = arr[j];
-                    arr[j] = arr[j + 1];
-                    arr[j + 1] = temp;
-                }
-            }
-        }
+    public static String[] sortNames(String[] names) {
+        Arrays.sort(names);
+        return names;
     }
 
     public static void main(String[] args) {
 
-        int[] capacities = {72, 56, 24, 70, 60};
+        String[] names = {"Sleeper", "AC Chair", "First Class"};
 
-        System.out.println("Before Sort: " + Arrays.toString(capacities));
+        System.out.println("Before: " + Arrays.toString(names));
 
-        bubbleSort(capacities);
+        sortNames(names);
 
-        System.out.println("After Sort: " + Arrays.toString(capacities));
+        System.out.println("After: " + Arrays.toString(names));
     }
 }
