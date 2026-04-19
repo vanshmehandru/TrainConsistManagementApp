@@ -1,18 +1,20 @@
 
+
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
 public class TrainConsistManagementAppTest {
 
     @Test
-    void testBinarySearch_Found() {
-        String[] arr = {"BG101", "BG205", "BG309"};
-        assertTrue(TrainConsistManagementApp.binarySearch(arr, "BG205"));
+    void testThrowsException() {
+        String[] arr = {};
+        assertThrows(IllegalStateException.class,
+                () -> TrainConsistManagementApp.search(arr, "BG101"));
     }
 
     @Test
-    void testBinarySearch_NotFound() {
+    void testSearchWorks() {
         String[] arr = {"BG101", "BG205"};
-        assertFalse(TrainConsistManagementApp.binarySearch(arr, "BG999"));
+        assertTrue(TrainConsistManagementApp.search(arr, "BG101"));
     }
 }

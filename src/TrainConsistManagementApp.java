@@ -1,24 +1,16 @@
 
-import java.util.Arrays;
-
 public class TrainConsistManagementApp {
 
-    public static boolean binarySearch(String[] arr, String key) {
+    public static boolean search(String[] arr, String key) {
 
-        Arrays.sort(arr);
+        if (arr.length == 0) {
+            throw new IllegalStateException("No bogies available");
+        }
 
-        int low = 0;
-        int high = arr.length - 1;
-
-        while (low <= high) {
-
-            int mid = (low + high) / 2;
-
-            int cmp = key.compareTo(arr[mid]);
-
-            if (cmp == 0) return true;
-            else if (cmp < 0) high = mid - 1;
-            else low = mid + 1;
+        for (String id : arr) {
+            if (id.equals(key)) {
+                return true;
+            }
         }
 
         return false;
@@ -26,8 +18,8 @@ public class TrainConsistManagementApp {
 
     public static void main(String[] args) {
 
-        String[] arr = {"BG309", "BG101", "BG205"};
+        String[] arr = {};
 
-        System.out.println(binarySearch(arr, "BG205"));
+        search(arr, "BG101");
     }
 }
