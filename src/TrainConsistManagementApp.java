@@ -1,13 +1,12 @@
-
 import java.util.*;
-import java.util.stream.*;
+import java.util.stream.Collectors;
 
 class Bogie {
-    private String name;
-    private int capacity;
+    String type;
+    int capacity;
 
-    public Bogie(String name, int capacity) {
-        this.name = name;
+    public Bogie(String type, int capacity) {
+        this.type = type;
         this.capacity = capacity;
     }
 
@@ -17,33 +16,50 @@ class Bogie {
 
     @Override
     public String toString() {
-        return name + "(" + capacity + ")";
+        return type + " (" + capacity + ")";
     }
 }
 
 public class TrainConsistManagementApp {
 
-    public static void main(String[] args) {
+    public static List<Bogie> filterWithLoop(List<Bogie> bogies) {
+        List<Bogie> result = new ArrayList<>();
+        for (Bogie b : bogies) {
+            if (b.getCapacity() > 60) {
+                result.add(b);
+            }
+        }
+        return result;
+    }
 
-        // Step 1: Create bogie list
-        List<Bogie> bogies = new ArrayList<>();
-
-        bogies.add(new Bogie("Sleeper", 72));
-        bogies.add(new Bogie("AC Chair", 50));
-        bogies.add(new Bogie("First Class", 30));
-        bogies.add(new Bogie("Sleeper", 80));
-
-        // Step 2: Stream + filter
-        List<Bogie> filteredBogies = bogies.stream()
+    public static List<Bogie> filterWithStream(List<Bogie> bogies) {
+        return bogies.stream()
                 .filter(b -> b.getCapacity() > 60)
                 .collect(Collectors.toList());
+    }
 
-        // Step 3: Display result
-        System.out.println("Filtered Bogies (capacity > 60):");
-        System.out.println(filteredBogies);
+    public static void main(String[] args) {
 
-        // Step 4: Original list check
-        System.out.println("\nOriginal Bogies:");
-        System.out.println(bogies);
+        List<Bogie> bogies = new ArrayList<>();
+
+        for (int i = 0; i < 10000; i++) {
+            bogies.add(new Bogie("Sleeper", (i % 100)));
+        }
+
+        long startLoop = System.nanoTime();
+        List<Bogie> loopResult = filterWithLoop(bogies);
+        long endLoop = System.nanoTime();
+        long loopTime = endLoop - startLoop;
+
+        long startStream = System.nanoTime();
+        List<Bogie> streamResult = filterWithStream(bogies);
+        long endStream = System.nanoTime();
+        long streamTime = endStream - startStream;
+
+        System.out.println("Loop Time (ns): " + loopTime);
+        System.out.println("Stream Time (ns): " + streamTime);
+
+        System.out.println("Loop Result Size: " + loopResult.size());
+        System.out.println("Stream Result Size: " + streamResult.size());
     }
 }

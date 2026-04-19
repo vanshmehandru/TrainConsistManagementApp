@@ -2,98 +2,122 @@ import org.junit.jupiter.api.Test;
 import java.util.*;
 import static org.junit.jupiter.api.Assertions.*;
 
-class TrainConsistManagementAppTest {
+class MainTest {
 
     @Test
-    void testFilter_CapacityGreaterThanThreshold() {
-        List<Bogie> list = Arrays.asList(
-                new Bogie("Sleeper", 80),
-                new Bogie("AC", 60)
+    void testSafety_AllBogiesValid() {
+        List<GoodsBogie> list = Arrays.asList(
+                new GoodsBogie("Cylindrical", "Petroleum"),
+                new GoodsBogie("Rectangular", "Coal")
+        );
+import org.junit.jupiter.api.Test;
+import java.util.*;
+import static org.junit.jupiter.api.Assertions.*;
+
+        class MainTest {
+
+            @Test
+            void testLoopFilteringLogic() {
+                List<Bogie> list = Arrays.asList(
+                        new Bogie("Sleeper", 50),
+                        new Bogie("AC Chair", 70)
+                );
+
+                List<Bogie> result = Main.filterWithLoop(list);
+
+                assertEquals(1, result.size());
+            }
+
+            @Test
+            void testStreamFilteringLogic() {
+                List<Bogie> list = Arrays.asList(
+                        new Bogie("Sleeper", 50),
+                        new Bogie("AC Chair", 70)
+                );
+
+                List<Bogie> result = Main.filterWithStream(list);
+
+                assertEquals(1, result.size());
+            }
+
+            @Test
+            void testLoopAndStreamResultsMatch() {
+                List<Bogie> list = Arrays.asList(
+                        new Bogie("Sleeper", 80),
+                        new Bogie("AC Chair", 70),
+                        new Bogie("First Class", 40)
+                );
+
+                List<Bogie> loopResult = Main.filterWithLoop(list);
+                List<Bogie> streamResult = Main.filterWithStream(list);
+
+                assertEquals(loopResult.size(), streamResult.size());
+            }
+
+            @Test
+            void testExecutionTimeMeasurement() {
+                List<Bogie> list = new ArrayList<>();
+                for (int i = 0; i < 1000; i++) {
+                    list.add(new Bogie("Sleeper", i));
+                }
+
+                long start = System.nanoTime();
+                Main.filterWithLoop(list);
+                long end = System.nanoTime();
+
+                long time = end - start;
+
+                assertTrue(time > 0);
+            }
+
+            @Test
+            void testLargeDatasetProcessing() {
+                List<Bogie> list = new ArrayList<>();
+                for (int i = 0; i < 10000; i++) {
+                    list.add(new Bogie("Sleeper", i % 100));
+                }
+
+                List<Bogie> result = Main.filterWithStream(list);
+
+                assertTrue(result.size() > 0);
+            }
+        }
+        assertTrue(Main.isTrainSafe(list));
+    }
+
+    @Test
+    void testSafety_CylindricalWithInvalidCargo() {
+        List<GoodsBogie> list = Arrays.asList(
+                new GoodsBogie("Cylindrical", "Coal")
         );
 
-        List<Bogie> result = TrainConsistManagementApp.filterBogies(list, 70);
-
-        assertEquals(1, result.size());
+        assertFalse(Main.isTrainSafe(list));
     }
 
     @Test
-    void testFilter_CapacityEqualToThreshold() {
-        List<Bogie> list = Arrays.asList(
-                new Bogie("Sleeper", 70)
+    void testSafety_NonCylindricalBogiesAllowed() {
+        List<GoodsBogie> list = Arrays.asList(
+                new GoodsBogie("Open", "Grain"),
+                new GoodsBogie("Box", "Coal")
         );
 
-        List<Bogie> result = TrainConsistManagementApp.filterBogies(list, 70);
-
-        assertTrue(result.isEmpty());
+        assertTrue(Main.isTrainSafe(list));
     }
 
     @Test
-    void testFilter_CapacityLessThanThreshold() {
-        List<Bogie> list = Arrays.asList(
-                new Bogie("AC", 50)
+    void testSafety_MixedBogiesWithViolation() {
+        List<GoodsBogie> list = Arrays.asList(
+                new GoodsBogie("Cylindrical", "Petroleum"),
+                new GoodsBogie("Cylindrical", "Coal") // ❌ violation
         );
 
-        List<Bogie> result = TrainConsistManagementApp.filterBogies(list, 70);
-
-        assertTrue(result.isEmpty());
+        assertFalse(Main.isTrainSafe(list));
     }
 
     @Test
-    void testFilter_MultipleBogiesMatching() {
-        List<Bogie> list = Arrays.asList(
-                new Bogie("Sleeper", 80),
-                new Bogie("Sleeper", 75),
-                new Bogie("AC", 60)
-        );
+    void testSafety_EmptyBogieList() {
+        List<GoodsBogie> list = new ArrayList<>();
 
-        List<Bogie> result = TrainConsistManagementApp.filterBogies(list, 70);
-
-        assertEquals(2, result.size());
-    }
-
-    @Test
-    void testFilter_NoBogiesMatching() {
-        List<Bogie> list = Arrays.asList(
-                new Bogie("AC", 50),
-                new Bogie("First Class", 40)
-        );
-
-        List<Bogie> result = TrainConsistManagementApp.filterBogies(list, 70);
-
-        assertTrue(result.isEmpty());
-    }
-
-    @Test
-    void testFilter_AllBogiesMatching() {
-        List<Bogie> list = Arrays.asList(
-                new Bogie("Sleeper", 80),
-                new Bogie("Sleeper", 90)
-        );
-
-        List<Bogie> result = TrainConsistManagementApp.filterBogies(list, 70);
-
-        assertEquals(2, result.size());
-    }
-
-    @Test
-    void testFilter_EmptyBogieList() {
-        List<Bogie> list = new ArrayList<>();
-
-        List<Bogie> result = TrainConsistManagementApp.filterBogies(list, 70);
-
-        assertTrue(result.isEmpty());
-    }
-
-    @Test
-    void testFilter_OriginalListUnchanged() {
-        List<Bogie> list = new ArrayList<>();
-        list.add(new Bogie("Sleeper", 80));
-        list.add(new Bogie("AC", 60));
-
-        int originalSize = list.size();
-
-        TrainConsistManagementApp.filterBogies(list, 70);
-
-        assertEquals(originalSize, list.size());
+        assertTrue(Main.isTrainSafe(list));
     }
 }
