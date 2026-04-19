@@ -1,51 +1,33 @@
-import java.util.*;
 
-// Step 1: Custom Exception
-class InvalidCapacityException extends Exception {
-    public InvalidCapacityException(String message) {
-        super(message);
-    }
-}
-
-// Step 2: Passenger Bogie class
-class PassengerBogie {
-    private String type;
-    private int capacity;
-
-    public PassengerBogie(String type, int capacity) throws InvalidCapacityException {
-        if (capacity <= 0) {
-            throw new InvalidCapacityException("Capacity must be greater than zero");
-        }
-        this.type = type;
-        this.capacity = capacity;
-    }
-
-    @Override
-    public String toString() {
-        return type + "(" + capacity + ")";
-    }
-}
+import java.util.Arrays;
 
 public class TrainConsistManagementApp {
 
+    // Bubble Sort Method
+    public static void bubbleSort(int[] arr) {
+        int n = arr.length;
+
+        for (int i = 0; i < n - 1; i++) {
+            for (int j = 0; j < n - i - 1; j++) {
+
+                if (arr[j] > arr[j + 1]) {
+                    // swap
+                    int temp = arr[j];
+                    arr[j] = arr[j + 1];
+                    arr[j + 1] = temp;
+                }
+            }
+        }
+    }
+
     public static void main(String[] args) {
 
-        List<PassengerBogie> bogies = new ArrayList<>();
+        int[] capacities = {72, 56, 24, 70, 60};
 
-        try {
-            // Valid bogies
-            bogies.add(new PassengerBogie("Sleeper", 72));
-            bogies.add(new PassengerBogie("AC Chair", 50));
+        System.out.println("Before Sort: " + Arrays.toString(capacities));
 
-            // Invalid bogie (will throw exception)
-            bogies.add(new PassengerBogie("First Class", 0));
+        bubbleSort(capacities);
 
-        } catch (InvalidCapacityException e) {
-            System.out.println("Exception: " + e.getMessage());
-        }
-
-        // Display valid bogies only
-        System.out.println("\nPassenger Bogies:");
-        System.out.println(bogies);
+        System.out.println("After Sort: " + Arrays.toString(capacities));
     }
 }
