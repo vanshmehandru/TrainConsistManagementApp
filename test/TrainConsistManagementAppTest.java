@@ -1,4 +1,3 @@
-package app;
 
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
@@ -6,20 +5,20 @@ import static org.junit.jupiter.api.Assertions.*;
 public class TrainConsistManagementAppTest {
 
     @Test
-    void testSafeAssignment() {
-        TrainConsistManagementApp.GoodsBogie g =
-                new TrainConsistManagementApp.GoodsBogie("Cylindrical");
+    void testSort_BasicSorting() {
+        int[] arr = {72, 56, 24, 70, 60};
 
-        g.assignCargo("Petroleum");
-        assertEquals("Petroleum", g.cargo);
+        TrainConsistManagementApp.bubbleSort(arr);
+
+        assertArrayEquals(new int[]{24, 56, 60, 70, 72}, arr);
     }
 
     @Test
-    void testUnsafeAssignmentHandled() {
-        TrainConsistManagementApp.GoodsBogie g =
-                new TrainConsistManagementApp.GoodsBogie("Rectangular");
+    void testSort_AlreadySorted() {
+        int[] arr = {24, 56, 60};
 
-        g.assignCargo("Petroleum");
-        assertNull(g.cargo);
+        TrainConsistManagementApp.bubbleSort(arr);
+
+        assertArrayEquals(new int[]{24, 56, 60}, arr);
     }
 }
